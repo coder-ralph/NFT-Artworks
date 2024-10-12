@@ -3,6 +3,7 @@ import axios from 'axios';
 
 const PINATA_API_KEY = process.env.REACT_APP_PINATA_API_KEY;
 const PINATA_SECRET_KEY = process.env.REACT_APP_PINATA_SECRET_KEY;
+const PAGE_SIZE = 10;
 
 const FileUpload = () => {
     const [files, setFiles] = useState([]);
@@ -10,7 +11,7 @@ const FileUpload = () => {
     const [uploadedFiles, setUploadedFiles] = useState([]);
     const [showToast, setShowToast] = useState(false);
     const [uploading, setUploading] = useState(false);
-    const [loadingFiles, setLoadingFiles] = useState(false);
+    const [initialLoading, setInitialLoading] = useState(true);
 
     const handleFileChange = (e) => {
         const selectedFiles = Array.from(e.target.files);
@@ -25,7 +26,7 @@ const FileUpload = () => {
         }
 
         setFiles(validFiles);
-        setMessages(''); // Reset message
+        setMessages('');
     };
 
     const handleDrop = (e) => {
@@ -63,7 +64,7 @@ const FileUpload = () => {
             } catch (error) {
                 console.error('Error uploading file:', error);
                 setMessages((prev) => prev + ' Error uploading ' + file.name + '. ');
-                return null; // Return null for failed uploads
+                return null;
             }
         });
 
@@ -75,8 +76,8 @@ const FileUpload = () => {
             setMessages('Files uploaded successfully!');
             showToastMessage();
         }
-        
-        setFiles([]); // Clear files after upload
+
+        setFiles([]);
         setUploading(false);
     };
 
@@ -85,30 +86,44 @@ const FileUpload = () => {
         setTimeout(() => setShowToast(false), 3000);
     };
 
-    const fetchUploadedFiles = async () => {
-        setLoadingFiles(true);
-        try {
-            const response = await axios.get('https://api.pinata.cloud/data/pinList?status=pinned', {
-                headers: {
-                    'pinata_api_key': PINATA_API_KEY,
-                    'pinata_secret_api_key': PINATA_SECRET_KEY,
-                },
-            });
-            const uploadedNFTs = response.data.rows.filter(row => row.ipfs_pin_hash.startsWith('Qm'));
-            const files = uploadedNFTs.map(nft => ({
-                name: nft.ipfs_pin_hash,
-                url: `https://gateway.pinata.cloud/ipfs/${nft.ipfs_pin_hash}`,
-            }));
-            setUploadedFiles(files);
-        } catch (error) {
-            console.error('Error fetching uploaded files:', error);
-        } finally {
-            setLoadingFiles(false);
+    const fetchAllFiles = async () => {
+        let allFiles = [];
+        let page = 0;
+        let moreFiles = true;
+
+        setInitialLoading(true);
+
+        while (moreFiles) {
+            try {
+                const response = await axios.get(`https://api.pinata.cloud/data/pinList?status=pinned&pageLimit=${PAGE_SIZE}&pageOffset=${page * PAGE_SIZE}`, {
+                    headers: {
+                        'pinata_api_key': PINATA_API_KEY,
+                        'pinata_secret_api_key': PINATA_SECRET_KEY,
+                    },
+                });
+
+                const uploadedNFTs = response.data.rows.filter(row => row.ipfs_pin_hash.startsWith('Qm'));
+                const files = uploadedNFTs.map(nft => ({
+                    name: nft.ipfs_pin_hash,
+                    url: `https://gateway.pinata.cloud/ipfs/${nft.ipfs_pin_hash}`,
+                }));
+
+                allFiles = [...allFiles, ...files];
+                
+                moreFiles = files.length === PAGE_SIZE;
+                page += 1;
+            } catch (error) {
+                console.error('Error fetching uploaded files:', error);
+                moreFiles = false;
+            }
         }
+
+        setUploadedFiles(allFiles);
+        setInitialLoading(false);
     };
 
     useEffect(() => {
-        fetchUploadedFiles();
+        fetchAllFiles();
     }, []);
 
     return (
@@ -146,7 +161,7 @@ const FileUpload = () => {
 
             <div className="mt-20">
                 <h3 className="font-nft text-2xl font-bold mb-4 text-center">NFT Gallery</h3>
-                {loadingFiles ? (
+                {initialLoading ? (
                     <div className="flex items-center justify-center w-full h-full">
                         <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-500"></div>
                     </div>
