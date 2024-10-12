@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'NFTFont';
+  src: url('./assets/fonts/NftOpensea-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  background-color: #f9f9f9;
+  color: #000;
+  transition: background-color 0.3s, color 0.3s;
+  font-family: 'NFTFont', sans-serif;
+}
+
+body.dark {
+  background-color: #121212;
+  color: #ffffff;
+}
+
+.toast {
+  transition: opacity 0.5s ease-in-out;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
