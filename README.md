@@ -6,6 +6,7 @@ NFT Artworks is a web application that allows users to upload and display their 
 
 - [Features](#features)
 - [Technologies Used](#technologies-used)
+- [Screenshot](#screenshot)
 - [Getting Started](#getting-started)
 - [Deployment](#deployment)
 - [Environment Variables](#environment-variables)
@@ -26,6 +27,16 @@ NFT Artworks is a web application that allows users to upload and display their 
 - **Frontend**: React, Tailwind CSS
 - **Backend**: Pinata (for IPFS integration)
 - **Deployment**: Vercel
+
+## Screenshot
+
+### Light Theme
+
+![project screenshot](/src/assets/images/light-theme.png)
+
+### Light Theme
+
+![project screenshot](/src/assets/images/dark-theme.png)
 
 ## Getting Started
 
@@ -91,5 +102,3 @@ Contributions are welcome! If you have suggestions for improvements or features,
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
-### Instructions to Customize
