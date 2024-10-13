@@ -1,10 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import mediumZoom from 'medium-zoom';
+import { motion } from 'framer-motion';
 
 const PINATA_API_KEY = process.env.REACT_APP_PINATA_API_KEY;
 const PINATA_SECRET_KEY = process.env.REACT_APP_PINATA_SECRET_KEY;
 const PAGE_SIZE = 10;
+
+const itemVariants = {
+    hidden: { opacity: 0, scale: 0.8 },
+    visible: { opacity: 1, scale: 1, transition: { duration: 0.5 } },
+};
+
+const containerVariants = {
+    hidden: { opacity: 1 },
+    visible: {
+        opacity: 1,
+        transition: {
+            staggerChildren: 0.2,
+        },
+    },
+};
 
 const FileUpload = () => {
     const [files, setFiles] = useState([]);
@@ -49,7 +65,8 @@ const FileUpload = () => {
 
     const handleUpload = async () => {
         if (files.length === 0) {
-            setMessages('No files yet uploaded. Please select files.');
+            setMessages('Please select a file to upload.');
+            showToastMessage();
             return;
         }
 
@@ -157,12 +174,19 @@ const FileUpload = () => {
                 </div>
                 <button 
                     onClick={handleUpload} 
-                    className="bg-blue-500 text-white rounded p-2 mt-4"
+                    className="bg-blue-500 text-white rounded p-2 mt-4 flex items-center justify-center gap-2 shadow-lg transition-transform transition-shadow duration-300 ease-in-out hover:bg-blue-600 hover:shadow-xl"
                 >
                     {uploading ? (
                         <span className="animate-spin">Uploading...</span>
                     ) : (
-                        'Upload'
+                        <>
+                            <svg stroke="currentColor" fill="none" strokeWidth="2" viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round" className="text-white" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="17 8 12 3 7 8"></polyline>
+                                <line x1="12" y1="3" x2="12" y2="15"></line>
+                            </svg>
+                            Upload
+                        </>
                     )}
                 </button>
             </div>
@@ -174,21 +198,30 @@ const FileUpload = () => {
                         <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-500"></div>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    <motion.div
+                        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+                        variants={containerVariants}
+                        initial="hidden"
+                        animate="visible"
+                    >
                         {uploadedFiles.length > 0 ? (
                             uploadedFiles.map((uploadedFile, index) => (
-                                <div key={`${uploadedFile.cid}-${index}`} className="relative group overflow-hidden rounded-lg shadow-lg">
-                                    <img 
-                                        src={uploadedFile.url} 
-                                        alt={uploadedFile.name} 
-                                        className="w-full h-full object-cover sm:w-48 sm:h-48 sm:object-cover transition-transform duration-300 group-hover:scale-105 rounded-lg zoomable" 
+                                <motion.div
+                                    key={`${uploadedFile.cid}-${index}`}
+                                    className="relative group overflow-hidden rounded-lg shadow-lg"
+                                    variants={itemVariants}
+                                >
+                                    <img
+                                        src={uploadedFile.url}
+                                        alt={uploadedFile.name}
+                                        className="w-full h-full object-cover sm:w-48 sm:h-48 sm:object-cover transition-transform duration-300 group-hover:scale-105 rounded-lg zoomable"
                                     />
-                                </div>
+                                </motion.div>
                             ))
                         ) : (
                             <p>No files uploaded yet.</p>
                         )}
-                    </div>
+                    </motion.div>
                 )}
             </div>
 
