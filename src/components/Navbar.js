@@ -22,14 +22,14 @@ const Navbar = () => {
     return (
         <nav className={`p-4 ${isDarkTheme ? 'bg-gray-800' : 'bg-blue-500'}`}>
             <div className="container mx-auto flex justify-between items-center">
-                <h1 className="text-white text-2xl">NFT Artworks</h1>
+                <h1 className="text-white text-2xl sm:text-xl md:text-2xl">NFT Artworks</h1>
                 <div className="flex items-center space-x-4">
                     {/* Star the Repo Button */}
                     <a
                         href="https://github.com/coder-ralph/NFT-Artworks"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center space-x-2 text-sm text-white hover:text-yellow-300 transition-colors duration-300"
+                        className="flex items-center space-x-2 text-sm text-white hover:text-yellow-300 transition-colors duration-300 sm:text-xs"
                     >
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -45,7 +45,7 @@ const Navbar = () => {
                         >
                             <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
                         </svg>
-                        <span>Star the repo</span>
+                        <span className="text-sm sm:text-xs">Star the repo</span>
                     </a>
                     {/* Theme Toggle Button */}
                     <button
