@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import mediumZoom from 'medium-zoom';
 
 const PINATA_API_KEY = process.env.REACT_APP_PINATA_API_KEY;
 const PINATA_SECRET_KEY = process.env.REACT_APP_PINATA_SECRET_KEY;
@@ -12,6 +13,17 @@ const FileUpload = () => {
     const [showToast, setShowToast] = useState(false);
     const [uploading, setUploading] = useState(false);
     const [initialLoading, setInitialLoading] = useState(true);
+
+    useEffect(() => {
+        fetchAllFiles();
+    }, []);
+
+    useEffect(() => {
+        if (uploadedFiles.length > 0) {
+            const zoom = mediumZoom('.zoomable', { margin: 24 });
+            return () => zoom.detach();
+        }
+    }, [uploadedFiles]);
 
     const handleFileChange = (e) => {
         const selectedFiles = Array.from(e.target.files);
@@ -122,10 +134,6 @@ const FileUpload = () => {
         setInitialLoading(false);
     };
 
-    useEffect(() => {
-        fetchAllFiles();
-    }, []);
-
     return (
         <div className="mt-8 flex flex-col items-center px-4 sm:px-0">
             <div className="flex flex-col w-full">
@@ -173,7 +181,7 @@ const FileUpload = () => {
                                     <img 
                                         src={uploadedFile.url} 
                                         alt={uploadedFile.name} 
-                                        className="w-full h-full object-cover sm:w-48 sm:h-48 sm:object-cover transition-transform duration-300 group-hover:scale-105 rounded-lg" 
+                                        className="w-full h-full object-cover sm:w-48 sm:h-48 sm:object-cover transition-transform duration-300 group-hover:scale-105 rounded-lg zoomable" 
                                     />
                                 </div>
                             ))
