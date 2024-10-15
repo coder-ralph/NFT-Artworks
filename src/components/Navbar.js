@@ -21,9 +21,9 @@ const Navbar = () => {
     };
 
     return (
-        <nav className={`p-4 ${isDarkTheme ? 'bg-gray-800' : 'bg-blue-500'}`}>
+        <nav className={`p-6 ${isDarkTheme ? 'bg-gray-800' : 'bg-blue-500'}`}>
             <div className="container mx-auto flex justify-between items-center">
-                <h1 className="text-white text-2xl mx-4 md:mx-12">NFT Artworks</h1>
+                <h1 className="text-white text-2xl mx-4 md:mx-12">NFTs</h1>
                 <div className="flex items-center space-x-4 mx-4 md:mx-12">
                     {/* GitHub Button */}
                     <a
@@ -34,7 +34,6 @@ const Navbar = () => {
                     >
                         <FaGithub className="h-5 w-5" />
                     </a>
-
                     {/* Theme Toggle Button */}
                     <button
                         onClick={toggleTheme}
