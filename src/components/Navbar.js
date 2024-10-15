@@ -23,8 +23,8 @@ const Navbar = () => {
     return (
         <nav className={`p-6 ${isDarkTheme ? 'bg-gray-800' : 'bg-blue-500'}`}>
             <div className="container mx-auto flex justify-between items-center">
-                <h1 className="text-white text-2xl mx-4 md:mx-12">NFTs</h1>
-                <div className="flex items-center space-x-4 mx-4 md:mx-12">
+                <h1 className="text-white text-2xl mx-4">NFTs</h1>
+                <div className="flex items-center space-x-4 mx-4">
                     {/* GitHub Button */}
                     <a
                         href="https://github.com/coder-ralph/NFT-Artworks"
