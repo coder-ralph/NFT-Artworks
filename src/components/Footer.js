@@ -3,8 +3,8 @@ import React from 'react';
 const Footer = () => {
     return (
         <footer className="p-16 bg-[#1f2937] text-white w-full">
-            <div className="container mx-auto text-center">
-                <p>&copy; 2024 NFT Artworks. All Rights Reserved.</p>
+            <div className="container mx-auto flex flex-col sm:flex-row justify-between items-center text-sm sm:text-base">
+                <p className="whitespace-nowrap mb-2 sm:mb-0">&copy; 2024 NFT Artworks. All Rights Reserved.</p>
                 {/* Star the repo button */}
                 <div className="flex justify-center mt-2">
                     <a

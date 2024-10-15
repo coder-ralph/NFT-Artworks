@@ -31,6 +31,7 @@ const Navbar = () => {
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center text-white hover:text-yellow-300 transition-colors duration-300 transform hover:scale-110"
+                        aria-label="View NFT Artworks project on GitHub"
                     >
                         <FaGithub className="h-5 w-5" />
                     </a>

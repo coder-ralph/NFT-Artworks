@@ -88,7 +88,7 @@ const Gallery = () => {
             {/* Submit Button */}
             <button
                 onClick={openModal}
-                className="mb-4 flex items-center justify-center text-sm font-medium h-9 rounded-md px-3 transition-colors gap-2 bg-blue-500 text-white hover:bg-blue-600"
+                className="mb-4 flex items-center justify-center text-sm font-medium h-9 rounded-md px-3 transition-colors gap-2 bg-blue-700 text-white hover:bg-blue-600"
             >
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-send">
                     <path d="m22 2-7 20-4-9-9-4Z"></path>
@@ -100,11 +100,11 @@ const Gallery = () => {
             {/* Modal for file upload */}
             {isModalOpen && <SubmitFormModal closeModal={closeModal} setUploadedFiles={setUploadedFiles} />}
 
-            <div className="mt-10">
+            <div className="mt-10 min-h-[300px]">
                 <h3 className="font-nft text-3xl font-bold mb-4 text-center">Gallery</h3>
 
                 {initialLoading ? (
-                    <div className="mt-6 flex items-center justify-center w-full h-full">
+                    <div className="mt-6 flex items-center justify-center w-full h-full min-h-[200px]">
                         <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-500"></div>
                     </div>
                 ) : (
@@ -124,7 +124,7 @@ const Gallery = () => {
                                     <img
                                         src={uploadedFile.url}
                                         alt={uploadedFile.name}
-                                        className="w-full h-full object-cover sm:w-48 sm:h-48 sm:object-cover transition-transform duration-300 group-hover:scale-105 rounded-lg zoomable"
+                                        className="w-full h-full aspect-square object-cover sm:w-48 sm:h-48 sm:object-cover transition-transform duration-300 group-hover:scale-105 rounded-lg zoomable"
                                     />
                                 </motion.div>
                             ))

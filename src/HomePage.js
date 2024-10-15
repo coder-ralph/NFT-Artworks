@@ -9,11 +9,11 @@ const HomePage = () => {
             <Navbar />
             <div className="container mx-auto mt-8 p-4 flex-grow">
                 <header className="text-center">
-                    <h2 className="text-3xl sm:text-4xl font-bold mb-4">Welcome to NFT Artworks</h2>
-                    <p className="text-base sm:text-lg mb-8">Upload and showcase your unique NFT Artworks</p>
+                    <h2 className="text-2xl sm:text-4xl font-bold mb-4 whitespace-nowrap">Welcome to NFT Artworks</h2>
+                    <p className="text-sm sm:text-lg mb-8">Upload and showcase your unique NFT Artworks</p>
                 </header>
 
-                <section className="mb-8">
+                <section className="mb-8 min-h-[500px]">
                     <Gallery />
                 </section>
             </div>
