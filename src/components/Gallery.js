@@ -1,12 +1,28 @@
+
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import mediumZoom from "medium-zoom";
 import { motion } from "framer-motion";
 import SubmitFormModal from "./SubmitFormModal";
-
-const PINATA_API_KEY = process.env.REACT_APP_PINATA_API_KEY;
-const PINATA_SECRET_KEY = process.env.REACT_APP_PINATA_SECRET_KEY;
+import { PinataSDK } from "pinata";
+import GetfileData from "./GetfileData";
+const PINATA_API_KEY = "2617b60530d21ed66f84";
+const PINATA_SECRET_KEY = "e454b52d31c44e17473528294dd6dd10c655e6e964489f66481bab98e20f8305"
+const PINATA_JWT="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiIzYWRkN2VmMC1hM2I0LTQxOTYtOGJjMC00YmMyODk2ZmJiNzUiLCJlbWFpbCI6Im9taWl0amVlb25seUBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwicGluX3BvbGljeSI6eyJyZWdpb25zIjpbeyJkZXNpcmVkUmVwbGljYXRpb25Db3VudCI6MSwiaWQiOiJGUkExIn0seyJkZXNpcmVkUmVwbGljYXRpb25Db3VudCI6MSwiaWQiOiJOWUMxIn1dLCJ2ZXJzaW9uIjoxfSwibWZhX2VuYWJsZWQiOmZhbHNlLCJzdGF0dXMiOiJBQ1RJVkUifSwiYXV0aGVudGljYXRpb25UeXBlIjoic2NvcGVkS2V5Iiwic2NvcGVkS2V5S2V5IjoiOTdmNzQ3YTczNzk4YTJhYzM2NTkiLCJzY29wZWRLZXlTZWNyZXQiOiIzMDNlYTkwOGQzN2Q3NmNmYjVmMGZiOWNkZjNjZDNkYjEwYmU2YmI0NDdhNzkxM2ZkMTU4NGIwMTA0MjIwZmFlIiwiZXhwIjoxNzYwNTk1NTU4fQ._0P8xxkyTnZY_AXSF3d5P1QoJJi4Cc5IybIcbleNQX0"
 const PAGE_SIZE = 10;
+
+const pinata = new PinataSDK({
+  pinataJwt: PINATA_JWT,
+  pinataGateway: "maroon-peculiar-jellyfish-886.mypinata.cloud",
+});
+
+const options = {method: 'DELETE', headers: {Authorization: 'Bearer <token>'}};
+
+fetch('https://api.pinata.cloud/v3/files/{id}', options)
+  .then(response => response.json())
+  .then(response => console.log(response))
+  .catch(err => console.error(err));
+
 
 const itemVariants = {
   hidden: { opacity: 0, scale: 0.8 },
@@ -28,6 +44,7 @@ const Gallery = () => {
   const [initialLoading, setInitialLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [Price, setPrice] = useState(""); // Add state for default price
 
   const categories = [
     "Art",
@@ -66,8 +83,8 @@ const Gallery = () => {
           }`,
           {
             headers: {
-              pinata_api_key: PINATA_API_KEY,
-              pinata_secret_api_key: PINATA_SECRET_KEY,
+              pinata_api_key: `${PINATA_API_KEY}`,
+              pinata_secret_api_key: `${PINATA_SECRET_KEY}`,
             },
           }
         );
@@ -75,9 +92,12 @@ const Gallery = () => {
         const uploadedNFTs = response.data.rows.filter((row) =>
           row.ipfs_pin_hash.startsWith("Qm")
         );
+       
+        
         const files = uploadedNFTs.map((nft) => ({
           name: nft.ipfs_pin_hash,
           url: `https://gateway.pinata.cloud/ipfs/${nft.ipfs_pin_hash}`,
+        
         }));
 
         allFiles = [...allFiles, ...files];
@@ -125,12 +145,14 @@ const Gallery = () => {
         </svg>
         <span>Submit</span>
       </button>
+      
 
       {/* Modal for file upload */}
       {isModalOpen && (
         <SubmitFormModal
           closeModal={closeModal}
           setUploadedFiles={setUploadedFiles}
+          setPrice={setPrice}
         />
       )}
 
@@ -138,6 +160,7 @@ const Gallery = () => {
         <h3 className="font-nft text-3xl font-bold mb-4 text-center">
           Gallery
         </h3>
+      
         <div className=" mb-4">
           {categories.map((category) => (
             <button
@@ -163,25 +186,37 @@ const Gallery = () => {
             initial="hidden"
             animate="visible"
           >
+           {console.log(uploadedFiles)
+           }
             {uploadedFiles.length > 0 ? (
               uploadedFiles.map((uploadedFile, index) => (
+                
                 <motion.div
-                  key={`${uploadedFile.cid}-${index}`}
-                  className="mt-4 relative group overflow-hidden rounded-lg shadow-lg"
-                  variants={itemVariants}
-                >
-                  <img
-                    src={uploadedFile.url}
-                    alt={uploadedFile.name}
-                    className="w-full h-full aspect-square object-cover sm:w-48 sm:h-48 sm:object-cover transition-transform duration-300 group-hover:scale-105 rounded-lg zoomable"
-                  />
-                </motion.div>
+                key={`${uploadedFile.cid}-${index}`}
+                className="mt-4 relative group overflow-hidden rounded-lg shadow-lg"
+                variants={itemVariants}
+              >
+                <img
+                  src={uploadedFile.url}
+                  alt={uploadedFile.name}
+                  className="w-full h-full aspect-square object-cover sm:w-48 sm:h-48 sm:object-cover transition-transform duration-300 group-hover:scale-105 rounded-lg zoomable"
+                />
+              
+                <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-60 text-white p-2 text-center">
+                  <span className="text-sm font-semibold">{index+1}</span>
+                </div>
+              
+                
+              </motion.div>
+              
+                
               ))
             ) : (
               <p>No files uploaded yet.</p>
             )}
           </motion.div>
         )}
+          <GetfileData></GetfileData>
       </div>
     </div>
   );
