@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-
+import UploadJson from "./Uploadjson";
 const PINATA_API_KEY = process.env.REACT_APP_PINATA_API_KEY;
 const PINATA_SECRET_KEY = process.env.REACT_APP_PINATA_SECRET_KEY;
 
@@ -10,6 +10,7 @@ const SubmitForm = ({ setUploadedFiles, closeModal }) => {
   const [showToast, setShowToast] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("art");
+  const [defaultPrice, setDefaultPrice] = useState(""); // New state for the price
 
   const handleFileChange = (e) => {
     const selectedFiles = Array.from(e.target.files);
@@ -45,13 +46,28 @@ const SubmitForm = ({ setUploadedFiles, closeModal }) => {
       return;
     }
 
+    if (!defaultPrice) {
+      setMessages("Please enter a default price for the NFT.");
+      setShowToast(true);
+      setTimeout(() => setShowToast(false), 3000);
+      return;
+    }
+
     setUploading(true);
     const uploadPromises = files.map(async (file) => {
       const formData = new FormData();
       formData.append("file", file);
+      
+      // Create metadata object
+      const metadata = {
+        name: file.name,
+        keyValues: {
+          category: selectedCategory,
+          price: defaultPrice,
+        },
+      };
 
-      formData.append("category", selectedCategory);
-
+      // Send file and metadata together
       try {
         const response = await axios.post(
           "https://api.pinata.cloud/pinning/pinFileToIPFS",
@@ -62,6 +78,9 @@ const SubmitForm = ({ setUploadedFiles, closeModal }) => {
               pinata_secret_api_key: PINATA_SECRET_KEY,
               "Content-Type": "multipart/form-data",
             },
+            params: {
+              metadata: JSON.stringify(metadata), // Add metadata to the request
+            },
           }
         );
 
@@ -71,6 +90,7 @@ const SubmitForm = ({ setUploadedFiles, closeModal }) => {
           url: `https://gateway.pinata.cloud/ipfs/${response.data.IpfsHash}`,
           type: file.type || "application/octet-stream",
           category: selectedCategory,
+          price: defaultPrice,
         };
       } catch (error) {
         console.error("Error uploading file:", error);
@@ -80,6 +100,8 @@ const SubmitForm = ({ setUploadedFiles, closeModal }) => {
     });
 
     const results = await Promise.all(uploadPromises);
+    console.log("hwlo",results[0].price);
+    
     const successfulUploads = results.filter((file) => file !== null);
 
     if (successfulUploads.length > 0) {
@@ -110,10 +132,10 @@ const SubmitForm = ({ setUploadedFiles, closeModal }) => {
         <p className="text-sm text-center text-gray-600 mb-4">
           This will automatically be added to the gallery.
         </p>
-        <div className=" flex justify-center p-2">
-          <label className=" mr-4">Category</label>
+        <div className="flex justify-center p-2">
+          <label className="mr-4">Category</label>
           <select
-            className=" text-center border-black border-2 rounded-md"
+            className="text-center border-black border-2 rounded-md"
             name="nftCategory"
             id="nftCategory"
             onChange={(e) => setSelectedCategory(e.target.value)}
@@ -149,15 +171,34 @@ const SubmitForm = ({ setUploadedFiles, closeModal }) => {
             multiple
           />
         </div>
+        {/* New input for default price */}
+        <div className="mt-4">
+          <label htmlFor="defaultPrice" className="block text-sm font-medium text-gray-700">
+            Default Price (in ETH)
+          </label>
+          <input
+            type="number"
+            id="defaultPrice"
+            value={defaultPrice}
+            onChange={(e) => setDefaultPrice(e.target.value)}
+            placeholder="Enter price"
+            className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+          />
+        </div>
         <div className="flex justify-end mt-4">
           <button
             onClick={handleUpload}
-            className="bg-blue-500 text-white rounded p-2 transition duration-200 hover:bg-blue-600"
+            className=" text-white rounded p-2 transition duration-200 hover:bg-blue-600"
           >
+         
+          <div>
+          
+        </div>
+          
             {uploading ? (
               <span className="animate-spin">Uploading...</span>
             ) : (
-              "Upload"
+              <UploadJson defaultPrice={defaultPrice}></UploadJson>
             )}
           </button>
         </div>
