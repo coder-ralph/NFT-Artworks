@@ -9,7 +9,7 @@ const Navbar = () => {
         const savedTheme = localStorage.getItem('theme');
         if (savedTheme) {
             setIsDarkTheme(savedTheme === 'dark');
-            document.body.classList.toggle('dark', savedTheme === 'dark');
+            document.body.classList.toggle('dark', savedTheme === 'dark')
         }
     }, []);
 
