@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
@@ -9,14 +8,13 @@ const PinataFilesComponent = () => {
   const [fileContent, setFileContent] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
 
+  const PINATA_API_KEY = process.env.REACT_APP_PINATA_API_KEY;
+  const PINATA_SECRET_KEY = process.env.REACT_APP_PINATA_SECRET_KEY;
   const PAGE_SIZE = 10;
-  const PINATA_API_KEY = "add your own api key";
-  const PINATA_SECRET_KEY =
-    "add your own secret key";
 
   // Fetch files function
   const fetchFiles = async () => {
-    setInitialLoading(true); // Set loading state before fetching
+    setInitialLoading(true);
     let allFiles = [];
     let page = 0;
     let moreFiles = true;
@@ -54,11 +52,12 @@ const PinataFilesComponent = () => {
     }
 
     setUploadedFiles(allFiles);
-    setInitialLoading(false); // Stop loading state after fetching
+    setInitialLoading(false);
   };
 
+  // useEffect hook should be here, at the top level of the component
   useEffect(() => {
-    fetchFiles(); // Fetch files when the component loads
+    fetchFiles();
   }, []);
 
   const fetchFileData = async (filename) => {
@@ -101,8 +100,7 @@ const PinataFilesComponent = () => {
 
       <div className="flex items-center justify-center p-6 bg-gray-100 rounded-lg shadow-lg">
         <ul className="flex space-x-6">
-            {console.log("hi from uploaded files",uploadedFiles)}
-            
+          {console.log("hi from uploaded files", uploadedFiles)}
           {uploadedFiles.map((file, index) => (
             <li key={index} className="relative group">
               <button
@@ -111,7 +109,6 @@ const PinataFilesComponent = () => {
               >
                 Show Price of {index + 1} NFT
               </button>
-             
             </li>
           ))}
         </ul>
@@ -120,9 +117,9 @@ const PinataFilesComponent = () => {
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white p-2 rounded-lg w-96">
-            <h3 className="text-lg font-bold mb-4">Price Of the NFT</h3>
+            <h3 className="text-lg text-black dark:text-white font-bold mb-4">Price Of the NFT</h3>
             {fileContent ? (
-              <pre className="text-sm overflow-auto h-40 bg-gray-100 p-2 rounded">
+              <pre className="text-sm text-black dark:text-white overflow-auto h-40 bg-gray-100 p-2 rounded">
                 {JSON.parse(fileContent.price, null, 2)}
               </pre>
             ) : (

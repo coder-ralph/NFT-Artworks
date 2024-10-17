@@ -1,14 +1,10 @@
-
-
-// export default Uploadjson;
 import { PinataSDK } from "pinata-web3";
 import React, { useState } from "react";
 
 const UploadJson = ({defaultPrice}) => {
   const pinata = new PinataSDK({
-    pinataJwt:
-     "Replace with your actual JWT", // 
-    pinataGateway: "replace with your gateway",
+    pinataJwt: process.env.REACT_APP_PINATA_JWT,
+    pinataGateway: process.env.REACT_APP_PINATA_GATEWAY,
   });
 
   const [uploading, setUploading] = useState(false);
@@ -17,7 +13,7 @@ const UploadJson = ({defaultPrice}) => {
 
   const handleUpload = async () => {
     setUploading(true);
-    setError(null); // Reset any previous errors
+    setError(null);
 
     try {
       const upload = await pinata.upload.json({

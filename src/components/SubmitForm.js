@@ -9,8 +9,8 @@ const SubmitForm = ({ setUploadedFiles, closeModal }) => {
   const [messages, setMessages] = useState("");
   const [showToast, setShowToast] = useState(false);
   const [uploading, setUploading] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState("art");
-  const [defaultPrice, setDefaultPrice] = useState(""); // New state for the price
+  const [selectedCategory, setSelectedCategory] = useState("Art");
+  const [defaultPrice, setDefaultPrice] = useState("");
 
   const handleFileChange = (e) => {
     const selectedFiles = Array.from(e.target.files);
@@ -79,7 +79,7 @@ const SubmitForm = ({ setUploadedFiles, closeModal }) => {
               "Content-Type": "multipart/form-data",
             },
             params: {
-              metadata: JSON.stringify(metadata), // Add metadata to the request
+              metadata: JSON.stringify(metadata),
             },
           }
         );
@@ -100,8 +100,6 @@ const SubmitForm = ({ setUploadedFiles, closeModal }) => {
     });
 
     const results = await Promise.all(uploadPromises);
-    console.log("hwlo",results[0].price);
-    
     const successfulUploads = results.filter((file) => file !== null);
 
     if (successfulUploads.length > 0) {
@@ -126,16 +124,16 @@ const SubmitForm = ({ setUploadedFiles, closeModal }) => {
         </div>
       )}
       <div className="bg-white rounded-lg max-w-md w-full">
-        <h1 className="text-xl text-black font-semibold text-center mb-4">
+        <h1 className="text-xl text-black dark:text-white font-semibold text-center mb-4">
           Submit NFT Artworks
         </h1>
         <p className="text-sm text-center text-gray-600 mb-4">
           This will automatically be added to the gallery.
         </p>
         <div className="flex justify-center p-2">
-          <label className="mr-4">Category</label>
+          <label className="mr-4 text-black dark:text-white">Category</label>
           <select
-            className="text-center border-black border-2 rounded-md"
+            className="text-center border-black border-2 rounded-md text-black dark:text-white bg-white dark:bg-gray-700"
             name="nftCategory"
             id="nftCategory"
             onChange={(e) => setSelectedCategory(e.target.value)}
@@ -171,9 +169,8 @@ const SubmitForm = ({ setUploadedFiles, closeModal }) => {
             multiple
           />
         </div>
-        {/* New input for default price */}
         <div className="mt-4">
-          <label htmlFor="defaultPrice" className="block text-sm font-medium text-gray-700">
+          <label htmlFor="defaultPrice" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
             Default Price (in ETH)
           </label>
           <input
@@ -182,19 +179,14 @@ const SubmitForm = ({ setUploadedFiles, closeModal }) => {
             value={defaultPrice}
             onChange={(e) => setDefaultPrice(e.target.value)}
             placeholder="Enter price"
-            className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+            className="mt-1 block w-full p-2 border border-gray-300 rounded-md text-black dark:text-white bg-white dark:bg-gray-700"
           />
         </div>
         <div className="flex justify-end mt-4">
           <button
             onClick={handleUpload}
-            className=" text-white rounded p-2 transition duration-200 hover:bg-blue-600"
+            className="text-white rounded p-2 transition duration-200 hover:bg-blue-600"
           >
-         
-          <div>
-          
-        </div>
-          
             {uploading ? (
               <span className="animate-spin">Uploading...</span>
             ) : (

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import mediumZoom from "medium-zoom";
@@ -6,14 +5,15 @@ import { motion } from "framer-motion";
 import SubmitFormModal from "./SubmitFormModal";
 import { PinataSDK } from "pinata";
 import GetfileData from "./GetfileData";
-const PINATA_API_KEY = "2617b60530d21ed66f84";
-const PINATA_SECRET_KEY = "e454b52d31c44e17473528294dd6dd10c655e6e964489f66481bab98e20f8305"
-const PINATA_JWT="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiIzYWRkN2VmMC1hM2I0LTQxOTYtOGJjMC00YmMyODk2ZmJiNzUiLCJlbWFpbCI6Im9taWl0amVlb25seUBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwicGluX3BvbGljeSI6eyJyZWdpb25zIjpbeyJkZXNpcmVkUmVwbGljYXRpb25Db3VudCI6MSwiaWQiOiJGUkExIn0seyJkZXNpcmVkUmVwbGljYXRpb25Db3VudCI6MSwiaWQiOiJOWUMxIn1dLCJ2ZXJzaW9uIjoxfSwibWZhX2VuYWJsZWQiOmZhbHNlLCJzdGF0dXMiOiJBQ1RJVkUifSwiYXV0aGVudGljYXRpb25UeXBlIjoic2NvcGVkS2V5Iiwic2NvcGVkS2V5S2V5IjoiOTdmNzQ3YTczNzk4YTJhYzM2NTkiLCJzY29wZWRLZXlTZWNyZXQiOiIzMDNlYTkwOGQzN2Q3NmNmYjVmMGZiOWNkZjNjZDNkYjEwYmU2YmI0NDdhNzkxM2ZkMTU4NGIwMTA0MjIwZmFlIiwiZXhwIjoxNzYwNTk1NTU4fQ._0P8xxkyTnZY_AXSF3d5P1QoJJi4Cc5IybIcbleNQX0"
+
+const PINATA_API_KEY = process.env.REACT_APP_PINATA_API_KEY;
+const PINATA_SECRET_KEY = process.env.REACT_APP_PINATA_SECRET_KEY;
+const PINATA_JWT = process.env.REACT_APP_PINATA_JWT;
 const PAGE_SIZE = 10;
 
 const pinata = new PinataSDK({
   pinataJwt: PINATA_JWT,
-  pinataGateway: "maroon-peculiar-jellyfish-886.mypinata.cloud",
+  pinataGateway: "black-perfect-barnacle-746.mypinata.cloud",
 });
 
 const options = {method: 'DELETE', headers: {Authorization: 'Bearer <token>'}};
@@ -44,9 +44,10 @@ const Gallery = () => {
   const [initialLoading, setInitialLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
-  const [Price, setPrice] = useState(""); // Add state for default price
+  const [Price, setPrice] = useState("");
 
   const categories = [
+    "All",
     "Art",
     "Music",
     "Collectibles",
@@ -161,7 +162,7 @@ const Gallery = () => {
           Gallery
         </h3>
       
-        <div className=" mb-4">
+        <div className="mb-4 flex flex-wrap justify-center">
           {categories.map((category) => (
             <button
               key={category}
@@ -189,8 +190,7 @@ const Gallery = () => {
            {console.log(uploadedFiles)
            }
             {uploadedFiles.length > 0 ? (
-              uploadedFiles.map((uploadedFile, index) => (
-                
+              uploadedFiles.map((uploadedFile, index) => (         
                 <motion.div
                 key={`${uploadedFile.cid}-${index}`}
                 className="mt-4 relative group overflow-hidden rounded-lg shadow-lg"
@@ -204,12 +204,8 @@ const Gallery = () => {
               
                 <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-60 text-white p-2 text-center">
                   <span className="text-sm font-semibold">{index+1}</span>
-                </div>
-              
-                
-              </motion.div>
-              
-                
+                </div>  
+              </motion.div>   
               ))
             ) : (
               <p>No files uploaded yet.</p>
